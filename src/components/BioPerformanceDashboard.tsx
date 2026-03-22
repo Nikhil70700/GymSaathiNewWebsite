@@ -294,7 +294,7 @@ const BioPerformanceDashboard = () => {
             <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'center', height: 'clamp(120px,18vh,220px)' }}>
               <img
                 ref={mealRef}
-                src="/assets/meal_bowl.png"
+                src="src/assets/meal.png"
                 alt="Meal"
                 style={{ height: '100%', objectFit: 'contain', filter: 'drop-shadow(0 16px 32px rgba(0,0,0,.7)) drop-shadow(0 0 16px rgba(254,122,1,.18))' }}
               />
