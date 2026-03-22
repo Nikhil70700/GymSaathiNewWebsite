@@ -1,12 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform, useInView, useMotionValue, useSpring, AnimatePresence } from 'motion/react';
-import { Dumbbell, Heart, Activity, TrendingUp, Apple, Brain, Target, Bell, Calendar, Award, Users, Shield, Check, Play, Smartphone, ChevronRight, Zap, Flame, BarChart2, Clock, Star } from 'lucide-react';
+import { Dumbbell, Heart, Activity, TrendingUp, Apple, Brain, Target, Bell, Calendar, Award, Users, Shield, Check, Play, Smartphone, ChevronRight, Zap, Flame, BarChart2, Clock, Star, Home, ChevronDown } from 'lucide-react';
 
 /* ══════════════════════════════════════════════════════════
    GLOBAL STYLES
 ══════════════════════════════════════════════════════════ */
 const GLOBAL = `
-  @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600;700;800;900&display=swap');
 
   @keyframes gm-breathe { 0%,100%{opacity:.04} 50%{opacity:.11} }
   @keyframes gm-spin-cw  { to{transform:rotate(360deg)} }
@@ -55,6 +55,22 @@ const GLOBAL = `
     from { opacity:0; transform:translateY(10px); }
     to   { opacity:1; transform:translateY(0); }
   }
+  @keyframes gm-slide-in-left {
+    from { opacity:0; transform:translateX(-24px); }
+    to   { opacity:1; transform:translateX(0); }
+  }
+  @keyframes gm-fade-up {
+    from { opacity:0; transform:translateY(16px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  @keyframes gm-crumb-line {
+    from { width: 0; }
+    to   { width: 100%; }
+  }
+  @keyframes gm-tag-in {
+    from { opacity:0; transform:scale(.88) translateY(8px); }
+    to   { opacity:1; transform:scale(1) translateY(0); }
+  }
 
   .gm-btn-primary {
     position:relative; overflow:hidden;
@@ -83,6 +99,10 @@ const GLOBAL = `
   }
   @media(max-width:720px){.gm-cta-grid{grid-template-columns:1fr !important;}}
   @media(max-width:768px){.gm-two-col{grid-template-columns:1fr !important;}}
+  @media(max-width:860px){.gm-hero-inner{flex-direction:column !important; gap:32px !important;} .gm-hero-right{display:none !important;}}
+  @media(max-width:600px){
+    .gm-hero-scroll-indicator { display:none !important; }
+  }
 `;
 
 /* ══════════════════════════════════════════════════════════
@@ -139,8 +159,8 @@ function Badge({ children }: { children: React.ReactNode }) {
 function SectionHeading({ children, center = false }: { children: React.ReactNode, center?: boolean }) {
   return (
     <h2 style={{
-      fontFamily: "font-heading, sans-serif",
-      fontWeight: 700,
+      fontFamily: "'Barlow Condensed',sans-serif",
+      fontWeight: 800,
       fontSize: 'clamp(26px,3.6vw,48px)',
       letterSpacing: '-.4px',
       lineHeight: .95,
@@ -191,138 +211,165 @@ function BgBase({ color = '#0b0b0b' }: { color?: string }) {
 }
 
 /* ══════════════════════════════════════════════════════════
-   1. HERO
+   1. HERO — BOLD CENTERED FULL-SCREEN (matching partner page)
+   Massive centered typography, radial dark BG with
+   geometric ring graphic, accent price line, pill CTAs.
 ══════════════════════════════════════════════════════════ */
 function HeroSection() {
-  const ref = useRef(null);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const spX = useSpring(mouseX, { stiffness: 80, damping: 25 });
-  const spY = useSpring(mouseY, { stiffness: 80, damping: 25 });
-
-  const dumbbellX = useTransform(spX, [-1, 1], [-18, 18]);
-  const dumbbellY = useTransform(spY, [-1, 1], [-18, 18]);
-  const heartX = useTransform(spX, [-1, 1], [-26, 26]);
-  const heartY = useTransform(spY, [-1, 1], [-26, 26]);
-  const ringX = useTransform(spX, [-1, 1], [-12, 12]);
-  const ringY = useTransform(spY, [-1, 1], [-12, 12]);
-
-  const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const r = e.currentTarget.getBoundingClientRect();
-    mouseX.set((e.clientX - r.left - r.width / 2) / 80);
-    mouseY.set((e.clientY - r.top - r.height / 2) / 80);
-  };
-
-  const words = ['Your Fitness', 'Journey,', 'Simplified &', 'Smarter'];
-
   return (
     <motion.div
-      ref={ref}
-      className="relative w-full overflow-hidden"
-      style={{ minHeight: '100vh', background: '#080808', display: 'flex', alignItems: 'center' }}
-      onMouseMove={handleMove}
-      onMouseLeave={() => { mouseX.set(0); mouseY.set(0); }}
+      style={{
+        background: '#080808',
+        display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center',
+        position: 'relative', overflow: 'hidden',
+        textAlign: 'center',
+        padding: 'clamp(40px,5vh,72px) clamp(20px,6vw,80px) clamp(40px,5vh,72px)',
+        boxSizing: 'border-box',
+      }}
       initial="hidden" animate="visible" variants={staggerContainer}
     >
-      {/* Radial bg */}
-      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse at 40% 55%,rgba(254,122,1,.08) 0%,rgba(120,70,18,.18) 32%,rgba(30,16,4,.45) 55%,#080808 72%)' }} />
-      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(circle at 40% 56%,rgba(254,122,1,.12) 0%,transparent 48%)', animation: 'gm-breathe 4.5s ease-in-out infinite' }} />
-      <BgBase />
+      {/* ── Radial dark background matching screenshot ── */}
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse 80% 70% at 50% 50%, rgba(60,30,5,.85) 0%, rgba(20,10,2,.95) 45%, #080808 75%)' }} />
 
-      {/* Floating gym icons */}
-      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-        <motion.div style={{ position: 'absolute', top: '14%', left: '8%', x: dumbbellX, y: dumbbellY }}>
-          <Dumbbell style={{ width: 'clamp(48px,6vw,80px)', height: 'clamp(48px,6vw,80px)', color: 'rgba(247,147,30,.2)', strokeWidth: 1.5 }} />
-        </motion.div>
-        <motion.div style={{ position: 'absolute', top: '18%', right: '10%', x: heartX, y: heartY }}>
-          <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}>
-            <Activity style={{ width: 'clamp(40px,5vw,68px)', height: 'clamp(40px,5vw,68px)', color: 'rgba(254,122,1,.22)', strokeWidth: 1.5 }} />
-          </motion.div>
-        </motion.div>
-        <motion.div style={{ position: 'absolute', bottom: '16%', right: '9%', x: ringX, y: ringY }}>
-          <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}>
-            <svg width="clamp(64px,8vw,100px)" height="clamp(64px,8vw,100px)" viewBox="0 0 100 100" style={{ opacity: .18 }}>
-              <circle cx="50" cy="50" r="40" fill="none" stroke={O} strokeWidth="3" strokeDasharray="70 185" strokeLinecap="round" />
-              <circle cx="50" cy="50" r="30" fill="none" stroke={O} strokeWidth="2.5" strokeDasharray="45 145" strokeLinecap="round" />
-            </svg>
-          </motion.div>
-        </motion.div>
-        <motion.div style={{ position: 'absolute', bottom: '22%', left: '7%', x: dumbbellY, y: dumbbellX }}>
-          <motion.div animate={{ scale: [1, 1.15, 1], opacity: [.15, .3, .15] }} transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}>
-            <Flame style={{ width: 'clamp(36px,4.5vw,58px)', height: 'clamp(36px,4.5vw,58px)', color: O, strokeWidth: 1.5 }} />
-          </motion.div>
-        </motion.div>
+      {/* ── Subtle grid ── */}
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: .025, backgroundImage: 'linear-gradient(rgba(255,255,255,.7) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.7) 1px,transparent 1px)', backgroundSize: '72px 72px' }} />
+
+      {/* ── Large geometric ring (like screenshot) ── */}
+      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>
+        {/* Outer ring */}
+        <svg width="min(900px, 95vw)" height="min(900px, 95vw)" viewBox="0 0 900 900" style={{ opacity: .055, animation: 'gm-spin-cw 60s linear infinite', maxWidth: '100vw', maxHeight: '100vw' }}>
+          <circle cx="450" cy="450" r="420" fill="none" stroke={O} strokeWidth="1" strokeDasharray="8 28" strokeLinecap="round" />
+          <circle cx="450" cy="450" r="340" fill="none" stroke={O} strokeWidth="1" strokeDasharray="4 60" strokeLinecap="round" />
+          <circle cx="450" cy="450" r="260" fill="none" stroke={O} strokeWidth=".8" strokeDasharray="2 40" strokeLinecap="round" />
+          {/* Cross hairs */}
+          <line x1="450" y1="20"  x2="450" y2="880" stroke={O} strokeWidth=".5" opacity=".4" />
+          <line x1="20"  y1="450" x2="880" y2="450" stroke={O} strokeWidth=".5" opacity=".4" />
+          {/* Diagonal */}
+          <line x1="150" y1="150" x2="750" y2="750" stroke={O} strokeWidth=".4" opacity=".25" />
+          <line x1="750" y1="150" x2="150" y2="750" stroke={O} strokeWidth=".4" opacity=".25" />
+          {/* Corner marks */}
+          {[[150,150],[750,150],[750,750],[150,750]].map(([x,y],i) => (
+            <g key={i}>
+              <circle cx={x} cy={y} r="4" fill={O} opacity=".5" />
+              <circle cx={x} cy={y} r="10" fill="none" stroke={O} strokeWidth=".8" opacity=".35" />
+            </g>
+          ))}
+          {/* Center dot */}
+          <circle cx="450" cy="450" r="6" fill={O} opacity=".6" />
+          <circle cx="450" cy="450" r="18" fill="none" stroke={O} strokeWidth="1" opacity=".3" />
+        </svg>
       </div>
 
-      {/* Content */}
-      <div style={{ position: 'relative', zIndex: 10, maxWidth: 1200, margin: '0 auto', padding: 'clamp(96px,14vh,140px) clamp(20px,5vw,56px) clamp(64px,9vh,100px)', width: '100%' }}>
-        <div style={{ maxWidth: 780 }}>
+      {/* ── Orange center glow ── */}
+      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 600, height: 400, borderRadius: '50%', background: 'radial-gradient(ellipse,rgba(254,122,1,.11),transparent 65%)', filter: 'blur(20px)', pointerEvents: 'none', animation: 'gm-breathe 4s ease-in-out infinite' }} />
 
-          <motion.div variants={fadeInUp}>
-            <Badge>Gym Members Platform</Badge>
-          </motion.div>
+      {/* ── Content ── */}
+      <div style={{ position: 'relative', zIndex: 10, maxWidth: 980, width: '100%' }}>
 
-          {/* Headline */}
-          <div style={{ marginBottom: 'clamp(14px,2vh,20px)' }}>
-            {words.map((w, i) => (
-              <div key={i} style={{
-                fontFamily: "font-heading, sans-serif",
-                fontWeight: 700,
-                fontSize: 'clamp(30px,6vw,60px)',
-                lineHeight: 1,
-                letterSpacing: '.02em',
-                color: i >= 2 ? O : '#f5f5f5',
-                display: 'block',
-                paddingBottom: 'clamp(2px,.4vh,6px)',
-                animation: `gm-word-in .55s cubic-bezier(.22,1,.36,1) ${.15 + i * .1}s both`,
-              }}>
-                {w}
-              </div>
-            ))}
+        {/* Badge pill — exactly like screenshot */}
+        <motion.div variants={fadeInUp} style={{ display: 'flex', justifyContent: 'center', marginBottom: 'clamp(14px,2.5vh,28px)' }}>
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            padding: '7px 20px', borderRadius: 999,
+            background: 'rgba(254,122,1,.08)',
+            border: `1px solid rgba(254,122,1,.28)`,
+            backdropFilter: 'blur(8px)',
+          }}>
+            <OrangeDot size={7} />
+            <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 700, fontSize: 'clamp(10px,1vw,12px)', letterSpacing: '.32em', textTransform: 'uppercase', color: 'rgba(245,245,245,.85)' }}>
+              India's #1 Member Fitness Platform
+            </span>
           </div>
+        </motion.div>
 
-          <motion.div variants={fadeInUp} style={{ marginBottom: 'clamp(28px,4vh,40px)' }}>
-            <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 700, fontSize: 'clamp(14px,1.6vw,18px)', color: O, letterSpacing: '.04em', marginBottom: 10 }}>
-              Free Workouts · AI Diet Plans · Live Progress
-            </p>
-            <Sub max={560}>
-              Work out smarter with guided exercises, personalized plans, progress tracking, and expert nutrition support — all inside your gym's app.
-            </Sub>
-          </motion.div>
+        {/* ── MASSIVE headline ── */}
+        <motion.div variants={fadeInUp}>
+          <h1 style={{
+            fontFamily: "'Barlow',sans-serif",
+            fontWeight: 800,
+            fontSize: 'clamp(44px,9vw,128px)',
+            lineHeight: .92,
+            letterSpacing: '-.01em',
+            textTransform: 'uppercase',
+            margin: '0 0 clamp(14px,2.2vh,24px)',
+          }}>
+            <span style={{ display: 'block', color: '#f0f0f0' }}>TRAIN</span>
+            <span style={{ display: 'block', color: '#f0f0f0' }}>YOUR BODY</span>
+            <span style={{
+              display: 'block',
+              color: O,
+              textShadow: `0 0 60px rgba(254,122,1,.45), 0 0 120px rgba(254,122,1,.2)`,
+            }}>SMARTER.</span>
+          </h1>
+        </motion.div>
 
-          <motion.div variants={fadeInUp} style={{ display: 'flex', gap: 'clamp(10px,1.8vw,16px)', flexWrap: 'wrap', marginBottom: 'clamp(32px,5vh,48px)' }}>
-            <motion.button
-              className="gm-btn-primary"
-              whileHover={{ scale: 1.06, filter: 'brightness(1.1)' }} whileTap={{ scale: .97 }}
-              style={{ background: `linear-gradient(135deg,${O},#c55a00)`, color: '#fff', border: 'none', cursor: 'pointer', borderRadius: 999, fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 800, fontSize: 'clamp(13px,1.3vw,15px)', letterSpacing: '.18em', textTransform: 'uppercase', padding: 'clamp(13px,1.8vh,16px) clamp(26px,3.5vw,44px)', display: 'flex', alignItems: 'center', gap: 8, whiteSpace: 'nowrap' }}
-            >
-              <Play size={14} strokeWidth={2.5} /> Access via Your Gym
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.05, borderColor: OB, backgroundColor: OD }} whileTap={{ scale: .97 }}
-              style={{ background: 'transparent', border: '1.5px solid rgba(245,245,245,.25)', color: '#f5f5f5', cursor: 'pointer', borderRadius: 999, fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 700, fontSize: 'clamp(13px,1.3vw,15px)', letterSpacing: '.18em', textTransform: 'uppercase', padding: 'clamp(13px,1.8vh,16px) clamp(26px,3.5vw,44px)', display: 'flex', alignItems: 'center', gap: 8, whiteSpace: 'nowrap', transition: 'all .22s' }}
-            >
-              <Smartphone size={14} /> Explore Features
-            </motion.button>
-          </motion.div>
+        {/* Body copy */}
+        <motion.div variants={fadeInUp}>
+          <p style={{
+            fontFamily: "'Barlow',sans-serif", fontWeight: 400,
+            fontSize: 'clamp(14px,1.6vw,19px)', color: 'rgba(200,200,200,.78)',
+            lineHeight: 1.65, maxWidth: 640, margin: '0 auto clamp(16px,2.5vh,24px)',
+          }}>
+            GymSaathi gives every gym member free workouts, AI diet plans, and live progress tracking — all inside your gym's app. No extra subscription. No setup.
+          </p>
+        </motion.div>
 
-          {/* Stat pills */}
-          <motion.div variants={fadeInUp} style={{ display: 'flex', gap: 'clamp(14px,3vw,28px)', flexWrap: 'wrap' }}>
-            {[{ v: '10K+', l: 'Active Members' }, { v: '50+', l: 'Workout Plans' }, { v: '100%', l: 'Science-backed' }, { v: '24/7', l: 'Access' }].map((s, i) => (
-              <div key={i} style={{ borderLeft: `2px solid rgba(254,122,1,.42)`, paddingLeft: 'clamp(10px,1.5vw,14px)' }}>
-                <div style={{ fontFamily: "font-heading, sans-serif", fontSize: 'clamp(18px,2.4vw,27px)', color: O, lineHeight: 1 }}>{s.v}</div>
-                <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 600, fontSize: 'clamp(9px,.88vw,11px)', color: 'rgba(161,161,161,.52)', letterSpacing: '.18em', textTransform: 'uppercase', marginTop: 3 }}>{s.l}</div>
-              </div>
-            ))}
-          </motion.div>
-        </div>
+        {/* Orange accent line — price/highlight like screenshot */}
+        <motion.div variants={fadeInUp} style={{ marginBottom: 'clamp(18px,3vh,32px)' }}>
+          <p style={{
+            fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 800,
+            fontSize: 'clamp(14px,1.6vw,20px)',
+            color: O,
+            letterSpacing: '.12em',
+            textTransform: 'uppercase',
+            textShadow: `0 0 24px rgba(254,122,1,.5)`,
+            margin: 0,
+          }}>
+            100% Free for Members. Everything Included.
+          </p>
+        </motion.div>
+
+        {/* ── CTA pills — exactly like screenshot ── */}
+        <motion.div variants={fadeInUp} style={{ display: 'flex', gap: 'clamp(12px,2vw,18px)', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <motion.button
+            className="gm-btn-primary"
+            whileHover={{ scale: 1.06, filter: 'brightness(1.1)' }} whileTap={{ scale: .96 }}
+            style={{
+              background: O, color: '#fff', border: 'none', cursor: 'pointer',
+              borderRadius: 999,
+              fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 800,
+              fontSize: 'clamp(12px,1.3vw,15px)', letterSpacing: '.2em', textTransform: 'uppercase',
+              padding: 'clamp(14px,2vh,18px) clamp(32px,4.5vw,52px)',
+              display: 'inline-flex', alignItems: 'center', gap: 10, whiteSpace: 'nowrap',
+            }}
+          >
+            Access via Your Gym <ChevronRight size={15} strokeWidth={2.5} />
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.04, background: 'rgba(255,255,255,.06)', borderColor: 'rgba(255,255,255,.35)' }}
+            whileTap={{ scale: .96 }}
+            style={{
+              background: 'transparent',
+              border: '1.5px solid rgba(255,255,255,.22)',
+              color: 'rgba(245,245,245,.85)', cursor: 'pointer',
+              borderRadius: 999,
+              fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 700,
+              fontSize: 'clamp(12px,1.3vw,15px)', letterSpacing: '.2em', textTransform: 'uppercase',
+              padding: 'clamp(14px,2vh,18px) clamp(30px,4vw,48px)',
+              whiteSpace: 'nowrap', transition: 'all .22s',
+            }}
+          >
+            Explore Features
+          </motion.button>
+        </motion.div>
       </div>
 
-      {/* Scroll indicator */}
-      <div style={{ position: 'absolute', bottom: 'clamp(18px,3.5vh,32px)', left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, opacity: .4 }}>
-        <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 600, fontSize: 10, color: O, letterSpacing: '1.2px', textTransform: 'uppercase' }}>Scroll</span>
-        {[0, 1, 2].map(i => (
-          <div key={i} style={{ width: 11, height: 11, borderRight: `2px solid ${O}`, borderBottom: `2px solid ${O}`, animation: `gm-breathe 1.7s ease-in-out ${i * .2}s infinite`, opacity: 1 - i * .25, transform: 'rotate(45deg)' }} />
+      {/* ── Scroll indicator ── */}
+      <div className="gm-hero-scroll-indicator" style={{ position: 'absolute', bottom: 'clamp(16px,2.5vh,28px)', left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5, opacity: .35, zIndex: 10 }}>
+        <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 600, fontSize: 10, color: O, letterSpacing: '1.4px', textTransform: 'uppercase' }}>Scroll</span>
+        {[0,1,2].map(i => (
+          <div key={i} style={{ width: 10, height: 10, borderRight: `1.5px solid ${O}`, borderBottom: `1.5px solid ${O}`, transform: 'rotate(45deg)', animation: `gm-breathe 1.7s ease-in-out ${i * .22}s infinite`, opacity: 1 - i * .28 }} />
         ))}
       </div>
     </motion.div>
@@ -460,7 +507,7 @@ function HowItWorksSection() {
                   <div style={{ padding: '3px 12px', borderRadius: 999, background: OD, border: `1px solid ${OB}` }}>
                     <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 700, fontSize: 'clamp(8px,.8vw,10px)', letterSpacing: '.22em', textTransform: 'uppercase', color: 'rgba(254,122,1,.82)' }}>{s.tag}</span>
                   </div>
-                  <h3 style={{ fontFamily: "font-heading, sans-serif", fontWeight: 700, fontSize: 'clamp(18px,2.2vw,26px)', color: '#f5f5f5', lineHeight: 1, margin: 0, textTransform: 'uppercase' }}>{s.title}</h3>
+                  <h3 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 800, fontSize: 'clamp(18px,2.2vw,26px)', color: '#f5f5f5', lineHeight: 1, margin: 0, textTransform: 'uppercase' }}>{s.title}</h3>
                   <p style={{ fontFamily: "'Barlow',sans-serif", fontSize: 'clamp(12px,1.1vw,14px)', color: 'rgba(161,161,161,.8)', lineHeight: 1.7, margin: 0 }}>{s.desc}</p>
                   <div ref={el => {
                     if (el && isInView) { const t = setTimeout(() => { el.style.transition = `transform .75s cubic-bezier(.22,1,.36,1) ${s.delay}s`; el.style.transform = 'scaleX(1)'; }, 10); return () => clearTimeout(t); }
@@ -471,7 +518,7 @@ function HowItWorksSection() {
           </div>
         </div>
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: .6, delay: .4 }} style={{ textAlign: 'center', marginTop: 'clamp(40px,6vh,60px)' }}>
-          <motion.button className="gm-btn-primary" whileHover={{ scale: 1.06 }} whileTap={{ scale: .97 }} style={{ background: `linear-gradient(135deg,${O},#c55a00)`, color: '#fff', border: 'none', cursor: 'pointer', borderRadius: 999, fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 800, fontSize: 'clamp(12px,1.2vw,14px)', letterSpacing: '.2em', textTransform: 'uppercase', padding: 'clamp(13px,1.8vh,16px) clamp(36px,5vw,56px)', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+          <motion.button className="gm-btn-primary" whileHover={{ scale: 1.06 }} whileTap={{ scale: .97 }} style={{ background: `linear-gradient(135deg,${O},#c55a00)`, color: '#fff', border: 'none', cursor: 'pointer', borderRadius: 8, fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 800, fontSize: 'clamp(12px,1.2vw,14px)', letterSpacing: '.2em', textTransform: 'uppercase', padding: 'clamp(13px,1.8vh,16px) clamp(36px,5vw,56px)', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
             Ask Your Gym for Access <ChevronRight size={14} strokeWidth={2.5} />
           </motion.button>
         </motion.div>
@@ -548,7 +595,7 @@ function MemberExperienceSection() {
                             <span style={{ fontSize: 'clamp(16px,2vw,22px)' }}>{s.icon}</span>
                             <span style={{ fontFamily: "'Barlow',sans-serif", fontWeight: 500, fontSize: 'clamp(9px,.9vw,12px)', color: 'rgba(245,245,245,.7)' }}>{s.l}</span>
                           </div>
-                          <span style={{ fontFamily: "font-heading, sans-serif", fontSize: 'clamp(13px,1.6vw,17px)', color: O }}>{s.v}</span>
+                          <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 800, fontSize: 'clamp(13px,1.6vw,17px)', color: O }}>{s.v}</span>
                         </div>
                       ))}
                     </div>
@@ -630,13 +677,12 @@ function FinalCTASection() {
           style={{ borderRadius: 24, overflow: 'hidden', display: 'grid', gridTemplateColumns: 'minmax(0,1.1fr) minmax(0,.9fr)', border: `1px solid rgba(254,122,1,.18)`, boxShadow: '0 40px 80px rgba(0,0,0,.6)' }}
           className="gm-cta-grid"
         >
-          {/* LEFT */}
           <div style={{ background: '#111', padding: 'clamp(36px,5vw,64px)', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'clamp(20px,3vh,28px)' }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '5px 14px', borderRadius: 4, background: OD, border: `1px solid ${OB}`, width: 'fit-content' }}>
               <OrangeDot size={6} />
               <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 700, fontSize: 'clamp(9px,.9vw,11px)', letterSpacing: '.34em', textTransform: 'uppercase', color: O }}>Start Today</span>
             </div>
-            <h2 style={{ fontFamily: "font-heading, sans-serif", fontWeight: 700, fontSize: 'clamp(28px,3.8vw,52px)', lineHeight: .95, letterSpacing: '-.3px', textTransform: 'uppercase', color: '#f5f5f5', margin: 0 }}>
+            <h2 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontSize: 'clamp(28px,3.8vw,52px)', lineHeight: .95, letterSpacing: '-.3px', textTransform: 'uppercase', color: '#f5f5f5', margin: 0 }}>
               Start Your Fitness Journey with{' '}
               <span style={{ color: O, textShadow: `0 0 24px rgba(254,122,1,.4)` }}>GymSaathi</span>
             </h2>
@@ -657,20 +703,18 @@ function FinalCTASection() {
               <motion.button
                 className="gm-btn-primary"
                 whileHover={{ scale: 1.05, filter: 'brightness(1.1)' }} whileTap={{ scale: .97 }}
-                style={{ background: `linear-gradient(135deg,${O},#c55a00)`, color: '#fff', border: 'none', cursor: 'pointer', borderRadius: 999, fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 800, fontSize: 'clamp(12px,1.2vw,14px)', letterSpacing: '.18em', textTransform: 'uppercase', padding: 'clamp(12px,1.7vh,15px) clamp(24px,3vw,36px)', display: 'inline-flex', alignItems: 'center', gap: 7, whiteSpace: 'nowrap' }}
+                style={{ background: `linear-gradient(135deg,${O},#c55a00)`, color: '#fff', border: 'none', cursor: 'pointer', borderRadius: 8, fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 800, fontSize: 'clamp(12px,1.2vw,14px)', letterSpacing: '.18em', textTransform: 'uppercase', padding: 'clamp(12px,1.7vh,15px) clamp(24px,3vw,36px)', display: 'inline-flex', alignItems: 'center', gap: 7, whiteSpace: 'nowrap' }}
               >
                 <Zap size={13} strokeWidth={2.5} /> Get Access via My Gym
               </motion.button>
               <motion.button
                 whileHover={{ borderColor: OB, color: '#fff' }} whileTap={{ scale: .97 }}
-                style={{ background: 'transparent', border: '1.5px solid rgba(255,255,255,.18)', color: 'rgba(255,255,255,.65)', cursor: 'pointer', borderRadius: 999, fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 700, fontSize: 'clamp(12px,1.2vw,14px)', letterSpacing: '.18em', textTransform: 'uppercase', padding: 'clamp(12px,1.7vh,15px) clamp(22px,2.8vw,32px)', whiteSpace: 'nowrap', transition: 'all .2s' }}
+                style={{ background: 'transparent', border: '1.5px solid rgba(255,255,255,.18)', color: 'rgba(255,255,255,.65)', cursor: 'pointer', borderRadius: 8, fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 700, fontSize: 'clamp(12px,1.2vw,14px)', letterSpacing: '.18em', textTransform: 'uppercase', padding: 'clamp(12px,1.7vh,15px) clamp(22px,2.8vw,32px)', whiteSpace: 'nowrap', transition: 'all .2s' }}
               >
                 Learn More
               </motion.button>
             </div>
           </div>
-
-          {/* RIGHT */}
           <div style={{ background: `linear-gradient(135deg,${O},#d06000)`, padding: 'clamp(36px,5vw,64px)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 'clamp(20px,3vh,28px)', position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', inset: 0, opacity: .06, backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`, pointerEvents: 'none' }} />
             <div style={{ position: 'absolute', top: '-20%', right: '-20%', width: '70%', height: '70%', borderRadius: '50%', background: 'rgba(255,255,255,.08)', filter: 'blur(40px)', pointerEvents: 'none' }} />
@@ -681,7 +725,7 @@ function FinalCTASection() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(16px,2.5vw,24px)', flex: 1, alignContent: 'center' }}>
               {metrics.map((m, i) => (
                 <div key={i} style={{ background: 'rgba(0,0,0,.18)', borderRadius: 14, padding: 'clamp(16px,2.2vw,24px)', backdropFilter: 'blur(8px)' }}>
-                  <div style={{ fontFamily: "font-heading, sans-serif", fontWeight: 700, fontSize: 'clamp(24px,3.2vw,42px)', color: '#fff', lineHeight: 1, marginBottom: 4 }}>{m.v}</div>
+                  <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontSize: 'clamp(24px,3.2vw,42px)', color: '#fff', lineHeight: 1, marginBottom: 4 }}>{m.v}</div>
                   <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 600, fontSize: 'clamp(9px,.85vw,11px)', letterSpacing: '.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,.65)' }}>{m.l}</div>
                 </div>
               ))}

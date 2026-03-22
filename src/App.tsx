@@ -335,7 +335,7 @@ function Navbar({ currentPage, onNavigate }: { currentPage: string; onNavigate: 
                 {/* Mobile logo (smaller) */}
                 <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 'clamp(12px,2vh,18px)', paddingBottom: 'clamp(12px,2vh,16px)', borderBottom: '1px solid rgba(247,147,30,.1)' }}>
                   <img
-                    src="/gymsaathifinallogowithtextblack.png"
+                    src="src/assets/GymsaathiLogo.png"
                     alt="GymSaathi"
                     style={{
                       height: 'clamp(28px,8vw,40px)',
@@ -661,7 +661,7 @@ function HeroSection() {
       <motion.div
         ref={ref}
         className="relative overflow-hidden bg-[#080808]"
-        style={{ height:'80vh', width:'100%' }}
+        style={{ height:'100vh', width:'100%' }}
         initial="hidden"
         animate="visible"
       >
