@@ -27,7 +27,7 @@ const slides = [
     status: "Active",
     hex: "#3b82f6",
     icon: LineChart,
-    image: "/assets/gym_erp.png",
+    image: "src/assets/operationalcontrol (1).png",
   },
   {
     id: "diet",
@@ -44,7 +44,7 @@ const slides = [
     status: "Beta",
     hex: "#22c55e",
     icon: Brain,
-    image: "/assets/ai_diet.png",
+    image: "src/assets/nutriPlanning.png",
   },
   {
     id: "bca",
@@ -61,7 +61,7 @@ const slides = [
     status: "Active",
     hex: "#a855f7",
     icon: Activity,
-    image: "/assets/bca.png",
+    image: "src/assets/bcas.png",
   },
   {
     id: "marketing",
@@ -78,7 +78,7 @@ const slides = [
     status: "Active",
     hex: "#eab308",
     icon: Megaphone,
-    image: "/assets/marketing.png",
+    image: "src/assets/marketing.png",
   },
   {
     id: "pos",
@@ -95,7 +95,7 @@ const slides = [
     status: "Active",
     hex: "#ef4444",
     icon: CreditCard,
-    image: "/assets/pos.png",
+    image: "src/assets/smart payment.png",
   },
   {
     id: "access",
@@ -112,7 +112,7 @@ const slides = [
     status: "Active",
     hex: "#06b6d4",
     icon: ScanFace,
-    image: "/assets/biometric.png",
+    image: "src/assets/face.png",
   },
 ];
 
