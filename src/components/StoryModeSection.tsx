@@ -184,7 +184,7 @@ function ProblemCard() {
         }} />
 
         <img
-          src="https://images.unsplash.com/photo-1758519288176-0cde8339e06f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3b3JyaWVkJTIwYnVzaW5lc3MlMjBvd25lciUyMHRoaW5raW5nfGVufDF8fHx8MTc2OTI1NjQyOXww&ixlib=rb-4.1.0&q=80&w=1080"
+          src="src/assets/problem.png"
           alt="Stressed Gym Owner"
           style={{ width: '100%', height: 'clamp(280px,38vh,420px)', objectFit: 'cover', filter: 'grayscale(.5) brightness(.72) sepia(.15)', display: 'block' }}
         />
@@ -370,7 +370,7 @@ function SolutionCard() {
                 boxShadow: '0 0 60px rgba(247,147,30,.5), inset 0 0 30px rgba(255,255,255,.15), 0 0 0 1px rgba(247,147,30,.5)',
               }}
             >
-              <img src="/gymsaathi_logo_icon.png" alt="GymSaathi" style={{ width: '55%', height: '55%', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
+              <img src="src/assets/gymsaathi_logo_icon.png" alt="GymSaathi" style={{ width: '55%', height: '55%', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
             </motion.div>
           </div>
         </div>
